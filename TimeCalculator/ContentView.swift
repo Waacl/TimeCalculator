@@ -20,13 +20,12 @@ enum CalcButton: String {
     case multiply = "×"
     case equal = "="
     case hour = "H"
-    case minute = "M"
     
     var buttonColor: Color {
     switch self {
         case .add, .subtract, .multiply, .divide, .equal:
             return .orange
-        case .clear, .minute, .hour:
+        case .clear, .hour:
             return Color(.lightGray)
         default:
             return Color(UIColor(red: 55/255.0, green: 55/255.0, blue: 55/255.0, alpha: 1))
@@ -50,7 +49,7 @@ struct ContentView: View {
     @State var activeButton: CalcButton = .none
     
     let buttons: [[CalcButton]] = [
-        [.clear, .hour, .minute, .divide],
+        [.clear, .hour, .divide],
         [.seven, .eight, .nine, .multiply],
         [.four, .five, .six, .subtract],
         [.one, .two, .three, .add],
@@ -66,7 +65,7 @@ struct ContentView: View {
 
                 HStack {
                     Spacer()
-                    Text(displayValue)
+                    Text(getFormattedDisplayValue())
                         .font(.system(size: 90))
                         .foregroundColor(.white)
                 }
@@ -97,8 +96,28 @@ struct ContentView: View {
         }
     }
     
+    func getFormattedString(hours: Int, minutes: Int) -> String {
+        return String(format: "%02d:%02d", hours, minutes)
+    }
+    
+    func getFormattedDisplayValue() -> String {
+        let calcValue = Int(displayValue)!
+        let hours = calcValue / 60
+        let minutes = calcValue % 60
+        return getFormattedString(hours: hours, minutes: minutes)
+    }
+    
     func calc(button: CalcButton) {
         switch button {
+        case .colon:
+            activeButton = .colon
+            let number = Int(self.value)!
+            self.value = String(number * 60)
+            self.displayValue = self.value
+        case .hour:
+            let number = Int(self.value)!
+            self.value = String(number * 60)
+            self.displayValue = self.value
         case .add, .subtract, .multiply, .divide, .equal:
             if button == .add {
                 self.currentOperation = .add
@@ -142,15 +161,24 @@ struct ContentView: View {
             activeButton = .none
             self.value = "0"
             self.displayValue = self.value
-        case .colon:
-            break
         default:
             let number = button.rawValue
             
-            if self.value == "0" {
-                value = number
+            if (activeButton == .colon) {
+                var inputNum = Int(number)!
+                var currentNum = Int(self.value)!
+                var hours = currentNum / 60
+                var minutes = currentNum % 60
+                
+                minutes = Int("\(minutes)\(number)")!
+                
+                self.value = String(hours * 60 + minutes)
             } else {
-                self.value = "\(self.value)\(number)"
+                if self.value == "0" {
+                    value = number
+                } else {
+                    self.value = "\(self.value)\(number)"
+                }
             }
             
             self.displayValue = self.value
@@ -158,7 +186,7 @@ struct ContentView: View {
     }
     
     func buttonWidth(item: CalcButton) -> CGFloat {
-        if item == .zero {
+        if item == .zero || item == .clear {
             return ((UIScreen.main.bounds.width - (4*12)) / 4) * 2
         }
             return (UIScreen.main.bounds.width - (5*12)) / 4

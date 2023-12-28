@@ -81,7 +81,7 @@ struct ContentView: View {
                     HStack(spacing: 12) {
                         ForEach(row, id: \.self) { button in
                             Button(action: {
-                                self.calc(button: button)
+                                calc(button: button)
                             }, label: {
                                 Text(button.rawValue)
                                     .font(.system(size: 32))
@@ -154,79 +154,78 @@ struct ContentView: View {
         switch button {
             case .colon:
                 activeButton = .colon
-                let number = Int(self.value)!
-                self.value = String(number * 60)
-                self.displayValue = self.value
+                let number = Int(value)!
+                value = String(number * 60)
+                displayValue = value
             case .hour:
-                let number = Int(self.value)!
-                self.value = String(number * 60)
-                self.displayValue = self.value
+                let number = Int(value)!
+                value = String(number * 60)
+                displayValue = value
             case .add, .subtract, .multiply, .divide, .equal:
                 if (button == .add) {
-                    self.currentOperation = .add
-                    self.runningNumber = Int(self.value) ?? 0
+                    currentOperation = .add
+                    runningNumber = Int(value) ?? 0
                 } else if (button == .subtract) {
-                    self.currentOperation = .subtract
-                    self.runningNumber = Int(self.value) ?? 0
+                    currentOperation = .subtract
+                    runningNumber = Int(value) ?? 0
                 } else if (button == .multiply) {
-                    self.currentOperation = .multiply
-                    self.runningNumber = Int(self.value) ?? 0
+                    currentOperation = .multiply
+                    runningNumber = Int(value) ?? 0
                 } else if (button == .divide) {
-                    self.currentOperation = .divide
-                    self.runningNumber = Int(self.value) ?? 0
+                    currentOperation = .divide
+                    runningNumber = Int(value) ?? 0
                 } else if (button == .equal) {
                     activeButton = .none
                     
-                    let runningValue = self.runningNumber
-                    let currentValue = Int(self.value) ?? 0
+                    let runningValue = runningNumber
+                    let currentValue = Int(value) ?? 0
                     
-                    switch self.currentOperation {
+                    switch currentOperation {
                         case .add:
-                            self.value = "\(runningValue + currentValue)"
+                            value = "\(runningValue + currentValue)"
                         case .subtract:
-                            self.value = "\(runningValue - currentValue)"
+                            value = "\(runningValue - currentValue)"
                         case .multiply:
-                            self.value = "\(runningValue * currentValue)"
+                            value = "\(runningValue * currentValue)"
                         case .divide:
-                            self.value = "\(runningValue / currentValue)"
+                            value = "\(runningValue / currentValue)"
                         case .none:
                             break
                     }
                 }
 
-                self.displayValue = self.value
+                displayValue = value
                 
                 if (button != .equal) {
                     activeButton = button
-                    self.value = "0"
+                    value = "0"
                 }
             case .clear:
                 activeButton = .none
-                self.value = "0"
-                self.displayValue = self.value
+                value = "0"
+                displayValue = "0"
             case .mode:
                 modeActive = !modeActive
             default:
                 let number = button.rawValue
                 
                 if (activeButton == .colon) {
-                    var inputNum = Int(number)!
-                    var currentNum = Int(self.value)!
-                    var hours = currentNum / 60
+                    let currentNum = Int(value)!
+                    let hours = currentNum / 60
                     var minutes = currentNum % 60
                     
                     minutes = Int("\(minutes)\(number)")!
                     
-                    self.value = String(hours * 60 + minutes)
+                    value = String(hours * 60 + minutes)
                 } else {
-                    if (self.value == "0") {
+                    if (value == "0") {
                         value = number
                     } else {
-                        self.value = "\(self.value)\(number)"
+                        value = "\(value)\(number)"
                     }
                 }
                 
-                self.displayValue = self.value
+                displayValue = value
         }
     }
     

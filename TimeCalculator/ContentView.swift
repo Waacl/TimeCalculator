@@ -21,6 +21,7 @@ enum CalcButton: String {
     case equal      = "="
     case hour       = "H"
     case mode       = "24H"
+    case now        = "⤹"
     
     var buttonColor: Color {
         switch self {
@@ -54,12 +55,15 @@ struct ContentView: View {
     @State var activeButton: CalcButton = .none
     @State var modeActive: Bool = true
     
+    let date = Date()
+    let calendar = Calendar.current
+    
     let buttons: [[CalcButton]] = [
         [.clear, .hour, .mode, .divide],
         [.seven, .eight, .nine, .multiply],
         [.four, .five, .six, .subtract],
         [.one, .two, .three, .add],
-        [.zero, .colon, .equal],
+        [.zero, .colon, .now, .equal],
     ]
     
     var body: some View {
@@ -157,6 +161,11 @@ struct ContentView: View {
                 let number = Int(value)!
                 value = String(number * 60)
                 displayValue = value
+            case .now:
+                let hour = calendar.component(.hour, from: date)
+                let minutes = calendar.component(.minute, from: date)
+                value = String((hour * 60) + minutes)
+                displayValue = value
             case .hour:
                 let number = Int(value)!
                 value = String(number * 60)
@@ -230,9 +239,9 @@ struct ContentView: View {
     }
     
     func getButtonWidth(button: CalcButton) -> CGFloat {
-        if (button == .zero) {
-            return ((UIScreen.main.bounds.width - (4 * 12)) / 4) * 2
-        }
+        // if (button == .zero) {
+        //     return ((UIScreen.main.bounds.width - (4 * 12)) / 4) * 2
+        // }
         
         return (UIScreen.main.bounds.width - (5 * 12)) / 4
     }

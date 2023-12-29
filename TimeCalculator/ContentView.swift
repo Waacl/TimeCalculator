@@ -55,9 +55,6 @@ struct ContentView: View {
     @State var activeButton: CalcButton = .none
     @State var modeActive: Bool = true
     
-    let date = Date()
-    let calendar = Calendar.current
-    
     let buttons: [[CalcButton]] = [
         [.clear, .hour, .mode, .divide],
         [.seven, .eight, .nine, .multiply],
@@ -76,7 +73,7 @@ struct ContentView: View {
                 HStack {
                     Spacer()
                     Text(getFormattedDisplayValue())
-                        .font(.system(size: 90))
+                        .font(.system(size: 90, weight: Font.Weight.light))
                         .foregroundColor(.white)
                 }
                 .padding()
@@ -88,7 +85,7 @@ struct ContentView: View {
                                 calc(button: button)
                             }, label: {
                                 Text(button.rawValue)
-                                    .font(.system(size: 32))
+                                    .font(.system(size: 40, weight: Font.Weight.medium))
                                     .bold()
                                     .frame(
                                         width: getButtonWidth(button: button),
@@ -102,13 +99,17 @@ struct ContentView: View {
                     }
                     .padding(.bottom, 3)
                 }
-            }
+            }.padding(.bottom, 35)
         }
     }
     
     func getForegroundColor(button: CalcButton) -> Color {
-        if ((button == .mode && modeActive) || button == activeButton) {
+        if (button == activeButton) {
             return .orange
+        }
+        
+        if (button == .clear || button == .hour || button == .mode) {
+            return .black
         }
         
         return .white
@@ -162,6 +163,8 @@ struct ContentView: View {
                 value = String(number * 60)
                 displayValue = value
             case .now:
+                let date = Date()
+                let calendar = Calendar.current
                 let hour = calendar.component(.hour, from: date)
                 let minutes = calendar.component(.minute, from: date)
                 value = String((hour * 60) + minutes)
@@ -240,14 +243,14 @@ struct ContentView: View {
     
     func getButtonWidth(button: CalcButton) -> CGFloat {
         // if (button == .zero) {
-        //     return ((UIScreen.main.bounds.width - (4 * 12)) / 4) * 2
+        //     return ((UIScreen.main.bounds.width - (4 * 13)) / 4) * 2
         // }
         
-        return (UIScreen.main.bounds.width - (5 * 12)) / 4
+        return (UIScreen.main.bounds.width - (5 * 13)) / 4
     }
 
     func getButtonHeight() -> CGFloat {
-        return (UIScreen.main.bounds.width - (5 * 12)) / 4
+        return (UIScreen.main.bounds.width - (5 * 13)) / 4
     }
     
     func getCornerRadius(button: CalcButton) -> CGFloat {

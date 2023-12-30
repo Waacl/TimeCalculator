@@ -19,15 +19,14 @@ enum CalcButton: String {
     case divide     = "÷"
     case multiply   = "×"
     case equal      = "="
-    case hour       = "H"
     case mode       = "24H"
-    case now        = "⤹"
+    case now        = "T"
     
     var buttonColor: Color {
         switch self {
             case .add, .subtract, .multiply, .divide, .equal:
                 return .orange
-            case .clear, .hour, .mode:
+            case .clear, .now, .mode:
                 return Color(.lightGray)
             default:
                 return Color(UIColor(red: 55/255.0, green: 55/255.0, blue: 55/255.0, alpha: 1))
@@ -53,14 +52,14 @@ struct ContentView: View {
     @State var runningNumber = 0
     @State var currentOperation: Operation = .none
     @State var activeButton: CalcButton = .none
-    @State var modeActive: Bool = true
+    @State var modeActive: Bool = false
     
     let buttons: [[CalcButton]] = [
-        [.clear, .hour, .mode, .divide],
+        [.clear, .now, .mode, .divide],
         [.seven, .eight, .nine, .multiply],
         [.four, .five, .six, .subtract],
         [.one, .two, .three, .add],
-        [.zero, .colon, .now, .equal],
+        [.zero, .colon, .equal],
     ]
     
     var body: some View {
@@ -108,7 +107,7 @@ struct ContentView: View {
             return .orange
         }
         
-        if (button == .clear || button == .hour || button == .mode) {
+        if (button == .clear || button == .now || button == .mode) {
             return .black
         }
         
@@ -168,10 +167,6 @@ struct ContentView: View {
                 let hour = calendar.component(.hour, from: date)
                 let minutes = calendar.component(.minute, from: date)
                 value = String((hour * 60) + minutes)
-                displayValue = value
-            case .hour:
-                let number = Int(value)!
-                value = String(number * 60)
                 displayValue = value
             case .add, .subtract, .multiply, .divide, .equal:
                 if (button == .add) {
@@ -242,9 +237,9 @@ struct ContentView: View {
     }
     
     func getButtonWidth(button: CalcButton) -> CGFloat {
-        // if (button == .zero) {
-        //     return ((UIScreen.main.bounds.width - (4 * 13)) / 4) * 2
-        // }
+        if (button == .zero) {
+            return ((UIScreen.main.bounds.width - (4 * 13)) / 4) * 2
+        }
         
         return (UIScreen.main.bounds.width - (5 * 13)) / 4
     }

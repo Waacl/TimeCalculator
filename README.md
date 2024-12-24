@@ -16,10 +16,9 @@ Built to address the limitations of standard calculators, TimeCalculator saves y
 
 ## Get Started
 
-1. **Clone the Repository**:
-   ```
-   git clone https://github.com/Waacl/TimeCalculator.git
-   ```
+1. **Clone the Repository**: `git clone https://github.com/Waacl/TimeCalculator.git`
 2. **Open in Xcode**: Navigate to the project directory and open the `.xcodeproj` file in Xcode.
 3. **Build and Run**: Build the project and run it on your iOS device or simulator.
 4. **Checkout 24-hour mode** Switch between the default and 24-Hour modes as needed to customize your calculations.
+
+<img src="https://github.com/user-attachments/assets/026078d6-06a0-436d-8349-39c5975e08dd" width="200">
